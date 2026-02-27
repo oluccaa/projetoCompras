@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import pandas as pd
 
 @dataclass
 class Compra:
@@ -8,9 +9,9 @@ class Compra:
     um: str
     valor: float
     ipi: str
-    minimo: float # Atualizado para aceitar números
+    minimo: str # Mantido como string devido a valores como "1 PEÇA"
     prazo: str
-    frete: float  # Atualizado para aceitar números
+    frete: str  # Mantido como string devido a valores como "FOB" ou "CIF"
     promocao: str
 
     @staticmethod
