@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 
-
 @dataclass
 class Compra:
     fornecedor: str
@@ -9,19 +8,22 @@ class Compra:
     um: str
     valor: float
     ipi: str
-    minimo: str
+    minimo: float # Atualizado para aceitar números
     prazo: str
-    frete: str
+    frete: float  # Atualizado para aceitar números
     promocao: str
 
     @staticmethod
     def limpar_valor(valor_raw):
         """
-        Converte valor vindo do Excel como:
-        'R$ 1.234,56' → 1234.56
+        Garante a conversão correta independentemente de o Pandas 
+        entregar uma string formatada ou um float.
         """
-        if not valor_raw:
+        if not valor_raw or pd.isna(valor_raw):
             return 0.0
+
+        if isinstance(valor_raw, (int, float)):
+            return float(valor_raw)
 
         valor = (
             str(valor_raw)

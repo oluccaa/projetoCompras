@@ -1,20 +1,34 @@
-import streamlit as st
+import sys
+import logging
+from config import get_settings
 from infrastructure.services.excel_reader import ExcelReader
 from infrastructure.repositories.supabase_compra_repository import SupabaseCompraRepository
 from application.use_cases.SincronizarComprasUseCase import SincronizarComprasUseCase
 
-CAMINHO_EXCEL = r"Z:\Compras\Controladoria\TABELA_BASE_AÇOS_VITAL.xlsx"
+# Configuração simples de log para registar a execução
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
-st.title("AÇOS VITAL - SINCRONIZAÇÃO")
-
-if st.button("SINCRONIZAR AGORA"):
+def executar_sincronizacao():
     try:
-        reader = ExcelReader(CAMINHO_EXCEL)
+        logging.info("A iniciar a sincronização das cotações...")
+        
+        # Utiliza o caminho definido no ficheiro .env
+        settings = get_settings()
+        
+        reader = ExcelReader(settings.caminho_excel)
         repo = SupabaseCompraRepository()
-        use_case = SincronizarComprasUseCase(repo, reader) # Corrigida a chamada da classe
+        use_case = SincronizarComprasUseCase(repo, reader)
 
         use_case.executar()
-
-        st.success("DADOS SINCRONIZADOS COM SUCESSO")
+        
+        logging.info("Sincronização concluída com sucesso.")
+        
     except Exception as e:
-        st.error(f"Erro: {e}")
+        logging.error(f"Erro durante a sincronização: {e}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    executar_sincronizacao()
