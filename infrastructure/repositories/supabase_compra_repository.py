@@ -1,7 +1,7 @@
 from typing import List
 from domain.entities.compra import Compra
-from domain.repositories.compra_repository import CompraRepository
-from infrastructure.database.supabase_client import get_client
+from domain.repositories.compras_repository import CompraRepository
+from infrastructure.database.supabase_cliente import get_client
 
 class SupabaseCompraRepository(CompraRepository):
 
